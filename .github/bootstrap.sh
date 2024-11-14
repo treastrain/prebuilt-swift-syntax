@@ -7,6 +7,7 @@ SWIFT_SYNTAX_REPOSITORY_URL="https://github.com/$SWIFT_SYNTAX_OWNER/$SWIFT_SYNTA
 SEMVER_PATTERN="^[0-9]+\.[0-9]+\.[0-9]+$"
 WRAPPER_NAME="PrebuiltSwiftSyntax"
 ARCH="arm64"
+ARCH_INTEL="x86_64"
 CONFIGURATION="release"
 DERIVED_DATA_PATH="$PWD/derivedData"
 
@@ -94,8 +95,8 @@ MODULES=(
 
 PLATFORMS=(
     # xcodebuild destination    XCFramework folder name
-    "macos"                     "macos-$ARCH"
-    "iOS Simulator"             "ios-$ARCH-simulator"
+    "macos"                     "macos-${ARCH}_${ARCH_INTEL}"
+    "iOS Simulator"             "ios-${ARCH}_${ARCH_INTEL}-simulator"
 )
 
 XCODEBUILD_LIBRARIES=""
@@ -124,12 +125,13 @@ for ((i = 0; i < ${#PLATFORMS[@]}; i += 2)); do
         | xcbeautify
 
     for MODULE in ${MODULES[@]}; do
-        INTERFACE_PATH="$DERIVED_DATA_PATH/Build/Intermediates.noindex/swift-syntax.build/$CONFIGURATION*/${MODULE}.build/Objects-normal/$ARCH/${MODULE}.swiftinterface"
-        cp $INTERFACE_PATH "$OUTPUTS_PATH"
+        MODULE_PATH="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION*/${MODULE}.swiftmodule/*.swiftinterface"
+        mkdir "$OUTPUTS_PATH/${MODULE}.swiftmodule"
+        cp -a $MODULE_PATH "$OUTPUTS_PATH/${MODULE}.swiftmodule"
     done
 
     # FIXME: figure out how to make xcodebuild output the .a file directly. For now, we package it ourselves.
-    ar -crs "$LIBRARY_PATH" $DERIVED_DATA_PATH/Build/Intermediates.noindex/swift-syntax.build/$CONFIGURATION*/*.build/Objects-normal/$ARCH/Binary/*.o
+    ar -crs "$LIBRARY_PATH" $DERIVED_DATA_PATH/Build/Products/$CONFIGURATION*/*.o
 done
 
 cd ..
@@ -148,7 +150,7 @@ xcodebuild -quiet -create-xcframework \
 for ((i = 1; i < ${#PLATFORMS[@]}; i += 2)); do
     XCFRAMEWORK_PLATFORM_NAME="${PLATFORMS[i]}"
     OUTPUTS_PATH="${PLATFORMS_OUTPUTS_PATH}/${XCFRAMEWORK_PLATFORM_NAME}"
-    cp $OUTPUTS_PATH/*.swiftinterface "$XCFRAMEWORK_PATH/$XCFRAMEWORK_PLATFORM_NAME"
+    cp -a $OUTPUTS_PATH/*.swiftmodule "$XCFRAMEWORK_PATH/$XCFRAMEWORK_PLATFORM_NAME"
 done
 
 zip --quiet --recurse-paths $XCFRAMEWORK_NAME.zip $XCFRAMEWORK_NAME
