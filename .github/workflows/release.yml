@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       swift_syntax_tag:
-        description: 'The tag to base the release on from the swift-syntax repository.'
+        description: 'The tag to base the release on from the swiftlang/swift-syntax repository.'
         required: true
         type: string
 

@@ -1,10 +1,11 @@
 #!/bin/bash
 
 SWIFT_SYNTAX_VERSION=$1
+SWIFT_SYNTAX_OWNER="swiftlang"
 SWIFT_SYNTAX_NAME="swift-syntax"
-SWIFT_SYNTAX_REPOSITORY_URL="https://github.com/apple/$SWIFT_SYNTAX_NAME.git"
+SWIFT_SYNTAX_REPOSITORY_URL="https://github.com/$SWIFT_SYNTAX_OWNER/$SWIFT_SYNTAX_NAME.git"
 SEMVER_PATTERN="^[0-9]+\.[0-9]+\.[0-9]+$"
-WRAPPER_NAME="SwiftSyntaxWrapper"
+WRAPPER_NAME="PrebuiltSwiftSyntax"
 ARCH="arm64"
 CONFIGURATION="release"
 DERIVED_DATA_PATH="$PWD/derivedData"
@@ -160,7 +161,7 @@ CHECKSUM=$(swift package compute-checksum $XCFRAMEWORK_NAME.zip)
 URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$SWIFT_SYNTAX_VERSION/$XCFRAMEWORK_NAME.zip"
 
 tee Package.swift <<EOF
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 import PackageDescription
 
