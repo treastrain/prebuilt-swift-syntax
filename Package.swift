@@ -11,7 +11,7 @@ let package = Package(
         .binaryTarget(
             name: "PrebuiltSwiftSyntax",
             url: "https://github.com/treastrain/prebuilt-swift-syntax/releases/download/600.0.1/PrebuiltSwiftSyntax.xcframework.zip",
-            checksum: "a21e0e68e608f094670a11bcf15ef92e41a88cf27510feddce6fafdce95a029e"
+            checksum: "4b677c7faec6f4ca0e8443a81bdd3e90157093b75b3762691b78af0a3c318bae"
         ),
     ]
 )
